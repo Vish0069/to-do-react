@@ -72,4 +72,23 @@ describe('App', () => {
       expect(screen.queryAllByRole('listitem')).toHaveLength(1);
     });
   });
+
+  test('should delete a task', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    const input = screen.getByRole('textbox', { name: 'Add Task:' });
+    const button = screen.getByRole('button', { name: 'Add' });
+
+    await user.type(input, 'Task to delete');
+    await user.click(button);
+
+    const deleteButton = screen.getByRole('button', { name: 'Delete' });
+
+    await user.click(deleteButton);
+
+    await waitFor(() => {
+      expect(screen.queryByText('Task to delete')).not.toBeInTheDocument();
+    });
+  });
 });
